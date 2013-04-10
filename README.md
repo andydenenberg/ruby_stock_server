@@ -15,7 +15,7 @@ or with overrides...
 ruby server.rb 2000 true false
 ```
 
-The sample client will register and periodically poll the server and display pricing info for all stocks.  It can be be run with defaults: <server_address="localhost"> <port=3000> using the following:
+The sample client will register and periodically poll the server and display pricing info for all stocks.  It can be be run with defaults: (server_address="localhost" port=3000 )
 
 ```ruby
 ruby client.rb <player_name>
