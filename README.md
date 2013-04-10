@@ -7,7 +7,7 @@ https://github.com/ekosz/stock_server
 
 The socket communications and commands are identical to Eric's version and are copied here.  The code and tests are complete except for price setting logic.  Currently the prices are set when the stocks are added, but not updated.  An interesting approach would be to wire up a pricing engine tied to real-time market activity.  Maybe using the Marketbeat GEM - https://github.com/michaeldv/market_beat
 
-The server can be run with defaults <port=3000> <logging=false> <scorecard=true>:
+The server can be run with defaults: ( port=3000 logging=false scorecard=true )
 
 ```ruby
 ruby server.rb
