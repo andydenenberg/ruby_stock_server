@@ -24,10 +24,12 @@ def display_status(stocks,c)
   end
 end
 
-player = ARGV[0]
+player = ARGV[0] ||= 'day_trader'
+host = ARGV[1] ||= 'localhost'
+port = ARGV[2] ||= 3000
 
-connection = Client.new("localhost",2000)
-puts s.register("#{player}")
+connection = Client.new(host,port)
+puts connection.register("#{player}")
 
 while true
     

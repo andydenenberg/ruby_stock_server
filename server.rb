@@ -150,8 +150,8 @@ end
 
 class Server
   
-  def self.run(logging = false, scorecard = true)
-    server = TCPServer.open(2000)   # Socket to listen on port 2000
+  def self.run(port = 3000, logging = false, scorecard = true)
+    server = TCPServer.open(port)   # Socket to listen on port 2000
     puts 'server started'
     loop {                          # Servers run forever
       Thread.start(server.accept) do |client|
@@ -184,9 +184,15 @@ class Server
 end
 
 if __FILE__ == $0
+  
+  
   Stock.add('aapl',425)
   Stock.add('ibm',211)
   Stock.add('goog',685)
 
- Server.run
+  port = ARGV[0] ||= 3000
+  logging = ARGV[1] ||= false
+  scorecard = ARGV[2] ||= true
+  
+ Server.run port, logging, scorecard
 end
