@@ -9,19 +9,19 @@ The socket communications and commands are identical to Eric's version and are c
 
 The server can be run with defaults <port=3000> <logging=false> <scorecard=true>:
 
+```ruby
 ruby server.rb
-
-or with overrides:
-
+or with overrides...
 ruby server.rb 2000 true false
+```
 
-	
 The sample client will register and periodically poll the server and display pricing info for all stocks.  It can be be run with defaults: <server_address="localhost"> <port=3000> using the following:
 
+```ruby
 ruby client.rb <player_name>
-
 override example...
 ruby client.rb DayTrader "railsdev.denenberg.net" 2000
+```
 
 Andy 04/08/2013
 
