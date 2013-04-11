@@ -24,6 +24,13 @@ describe Portfolio do
       @portfolio.buy('aapl', 10).should eql "OK BOUGHT AAPL 10 415"
     end
     
+    it 'should calculate the Total Value' do
+      Stock.update_price('aapl',425)
+      value = @portfolio.total_value
+      Stock.update_price('aapl', 415) # revert back to original price for subsequent tests
+      value.should eql 100100
+    end
+    
     it 'should subtract the cost of a purchase from the cash balance' do
       @portfolio.cash.should eql 100000 - 415 * 10
     end

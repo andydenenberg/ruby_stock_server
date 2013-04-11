@@ -12,6 +12,15 @@ class Portfolio
     @stocks.collect { |symbol,quantity| [symbol.upcase, ' ', quantity, ' '] }.flatten.join.strip
   end
   
+  def total_value
+    total = 0
+    @stocks.each do |symbol,quantity|
+      total += Stock.price(symbol) * quantity
+    end
+    total += cash
+    total
+  end
+  
   def buy(symbol,quantity)
       return "ERROR #{symbol.upcase} is an invalid symbol" if !valid_symbol?(symbol)
       current_price = Stock.price(symbol)

@@ -4,7 +4,7 @@ class Player
   @@players = [ ]
   
   def self.scorecard
-    @@players.collect { |portfolio,tag| [ portfolio.name, portfolio.cash ] }
+    @@players.collect { |portfolio,tag| [ portfolio.name, portfolio.cash, portfolio.total_value ] }
   end
   
   def self.register(name,tag) 
