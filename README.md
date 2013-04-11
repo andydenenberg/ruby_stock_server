@@ -23,7 +23,7 @@ The sample test client is provided which will register and periodically poll the
 ```ruby
 ruby test_client.rb <player_name>   ...with defaults: (server_address="localhost" port=3000 )
 override example...
-ruby client.rb DayTrader "stockserver.denenberg.net" 2000
+ruby test_client.rb DayTrader "stockserver.denenberg.net" 2000
 ```
 
 Andy 04/08/2013
