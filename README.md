@@ -18,10 +18,10 @@ or with overrides...
 ruby server.rb 2000 true false
 ```
 
-The sample client will register and periodically poll the server and display pricing info for all stocks.
+The sample test client is provided which will register and periodically poll the server and display pricing info for all stocks and portfolio value.  By default the test client buys an equal value of all the listed stocks.
 
 ```ruby
-ruby client.rb <player_name>   ...with defaults: (server_address="localhost" port=3000 )
+ruby test_client.rb <player_name>   ...with defaults: (server_address="localhost" port=3000 )
 override example...
 ruby client.rb DayTrader "stockserver.denenberg.net" 2000
 ```

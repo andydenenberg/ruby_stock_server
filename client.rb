@@ -1,51 +1,45 @@
-require 'socket'
-require_relative 'client_commands'
+class Client
 
-class Stock
-  attr_accessor :stocks
-  @stocks = [ ]
-  
-  def initialize(c)
-    @stocks = c.list_stocks.split(' ').collect { |symbol| 
-      [ symbol, c.price(symbol).split(' ')[1].to_f, nil ] 
-      }
-    stocks.shift # drop the command "OK" from the list
+  def initialize(host, port)
+    @socket = TCPSocket.new(host, port)
   end
-  
-  def display_status(c,counter)
-    puts "\e[H\e[2J" # clear screen
-    @stocks.each do |symbol,old_price,new_price|
-      new_price = c.price(symbol).split(' ')[1].to_f
-      delta = new_price - old_price
-      percent = 100* (delta / old_price )    
-      status = "%6s " % symbol
-      status << "price:$%3.2f " % new_price
-      status << "change:$%3.2f " % delta
-      status << "(%3.2f" % percent + '%)'
-      puts status 
-    end
-      puts "counter: #{counter}"
+
+  def close
+    @socket.close
   end
-  
+
+  def register(name)
+    send_command("register #{name}")
+  end
+
+  def list_stocks
+    send_command("list_stocks")
+  end
+
+  def current_cash
+    send_command("current_cash")
+  end
+
+  def current_stocks
+    send_command("current_stocks")
+  end
+
+  def price(ticker)
+    send_command("price #{ticker}")
+  end
+
+  def buy(ticker, amount)
+    send_command("buy #{ticker} #{amount}")
+  end
+
+  def sell(ticker, amount)
+    send_command("sell #{ticker} #{amount}")
+  end
+
+#  private
+
+  def send_command(command)
+    @socket.puts(command)
+    @socket.gets
+  end
 end
-
-
-player = ARGV[0] ||= 'day_trader'
-host = ARGV[1] ||= 'localhost'
-port = ARGV[2] ||= 3000
-
-connection = Client.new(host,port)
-puts connection.register("#{player}")
-
-counter = 0
-listed = Stock.new(connection) # get available stocks and prices
-
-while true
-    
-  listed.display_status(connection,counter)
-  counter += 1
-  sleep 2
-  
-end
-
-

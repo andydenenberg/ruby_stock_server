@@ -29,7 +29,7 @@ class Stock
   
   def self.refresh_prices
     @@stocks.each do |symbol,price|
-      update_price(symbol, MarketBeat.last_trade_real_time(symbol) )
+      update_price(symbol, MarketBeat.last_trade_real_time(symbol).to_f )
     end
   end
   

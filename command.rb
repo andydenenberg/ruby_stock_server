@@ -23,8 +23,8 @@ class Command
       return "OK #{portfolio.current_stocks}" if portfolio    
     when 'price'
       return "OK #{Stock.price(input[1])}"
-    when 'buy'     
-      return portfolio.buy(input[1],input[2].to_i) if portfolio
+    when 'buy'   
+      return portfolio.buy(input[1],input[2].to_i)  if portfolio
     when 'sell'
       return portfolio.sell(input[1],input[2].to_i) if portfolio
     else

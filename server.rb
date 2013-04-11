@@ -41,8 +41,9 @@ class Server
     sc << "Elasped time: %3.1f secs. \n" % (Time.now - start_time)
     Player.scorecard.each { |player| 
       sc << "Player:#{player[0]}"
-      sc << " Total:$#{player[2].to_s.reverse.gsub(/...(?=.)/,'\&,').reverse}"
-      sc << " Cash:$#{player[1].to_s.reverse.gsub(/...(?=.)/,'\&,').reverse}\n" }
+      sc << " Total Value:$#{player[2].to_i.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse}"
+      sc << " Cash:$#{player[1].to_i.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse}\n" 
+    }
     sc 
   end
   
@@ -54,6 +55,7 @@ if __FILE__ == $0
   Stock.add('ibm',nil)
   Stock.add('goog',nil)
   Stock.add('ge',nil)
+  Stock.add('msft',nil)
 
   port = ARGV[0] ||= 3000
   logging = ARGV[1] ||= false
