@@ -7,6 +7,8 @@ https://github.com/ekosz/stock_server
 
 The socket communications and commands are identical to Eric's version.  The major difference in function is the price for each stock is the real-time market price retrieved from Google and Yahoo finance.  As such the prices will be static except during the hours of 9:30am to 4:00pm EST M-F when the markets are open.  Eric's implementation set prices from a replay of historical data as well the effects from the system players.
 
+The Server class sets up a thread to periodically poll the market for price updates.  The Server class also spawns a thread to support each client connection that is created when a player joins the system.  There shouldn't be any contention or locking, but the threads do access common class variables.
+
 The prices are retrieved using the Marketbeat GEM
 https://github.com/michaeldv/market_beat
 
