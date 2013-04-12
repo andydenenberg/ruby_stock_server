@@ -1,6 +1,11 @@
 require 'socket'
 require_relative 'client'
 
+class Stock
+  attr_accessor :symbol, :old_price, :new_price, :cost_price, :quantity
+  Struct.new(:symbol, :old_price, :new_price, :cost_price, :quantity)
+end
+
 class Trader
   attr_accessor :stocks, :cash
   
@@ -14,14 +19,14 @@ class Trader
     puts "Elasped Time: #{(Time.now - start_time).to_i} secs.\n\n"
     puts " Stock    Price Shares      Value     Profit"
     total_value = update_value(c)
-    @stocks.each do |symbol, old_price, new_price, cost_price, quantity |
-      current = new_price * quantity
-      cost = cost_price * quantity
+    @stocks.each do |stock|
+      current = stock.new_price * stock.quantity
+      cost = stock.cost_price * stock.quantity
       percent = 100 * (current / cost ) - 100
       
-      status = "%6s " % symbol
-      status << " $%6.2f " % new_price.to_f
-      status << "%6.0f" % quantity      
+      status = "%6s " % stock.symbol
+      status << " $%6.2f " % stock.new_price.to_f
+      status << "%6.0f" % stock.quantity      
       status << "  $%6.2f " % current
       status << " $%6.2f " % (current - cost)
       status << "(%3.2f" % percent + '%)'
@@ -34,10 +39,10 @@ class Trader
   
   def update_value(c)
     total_value = 0
-      @stocks.each do |symbol, old_price, new_price, cost_price, quantity |
-        old_price = new_price
-        new_price = c.price(symbol)
-        total_value += new_price * quantity
+    @stocks.each do |stock|
+        stock.old_price = stock.new_price
+        stock.new_price = c.price(stock.symbol)
+        total_value += stock.new_price * stock.quantity
       end
     return total_value   
   end
@@ -93,10 +98,12 @@ if __FILE__ == $0
 
     # purchase equal value amounts of all listed stocks
     listed.each do |symbol| 
-      action, sym, quantity, cost_price = c.buy(symbol, (even_lot/c.price(symbol)).to_i)
-      old_price = new_price = cost_price = cost_price.to_f
-      portfolio.cash -= cost_price * quantity.to_i
-      portfolio.stocks << [ symbol, old_price, new_price, cost_price, quantity.to_i ]
+      s = Stock.new
+      action, s.symbol, s.quantity, s.cost_price = c.buy(symbol, (even_lot/c.price(symbol)).to_i)
+       s.quantity = s.quantity.to_i
+       s.old_price = s.new_price = s.cost_price = s.cost_price.to_f
+      portfolio.stocks << s
+      portfolio.cash -= s.cost_price * s.quantity
     end
 
     start_time = Time.now
