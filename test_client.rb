@@ -14,10 +14,22 @@ class Trader
     @cash = cash
   end
   
+  def right_align(label,value,size)
+    formatted = "%#{size}.2f" % value.abs
+    cents = formatted[-3..-1]
+    value < 0 ? sign = '-' : sign = ""
+    formatted = formatted[0..-4].gsub(' ', '')
+    formatted = formatted.reverse.gsub(/(\d{3})/,"\\1,").chomp(",").reverse
+#    formatted = formatted[0..-4].to_s.reverse.gsub(/...(?=.)/,'\&,').reverse + '.' + cents
+    ps = (size - formatted.length)
+    ps < 0 ? padding = '' : padding = " " * ps 
+    output = " #{label}" + padding + sign + formatted + cents
+  end
+  
   def display_status(c,start_time)
     puts "\e[H\e[2J" # clear screen
-    puts "Elasped Time: #{(Time.now - start_time).to_i} secs.\n\n"
-    puts " Stock    Price Shares      Value     Profit"
+    puts "Start Time: #{start_time.ctime}  |  Elasped Time: #{(Time.now - start_time).to_i} secs.\n\n"
+    puts " Stock     Price Shares      Value     Profit"
     total_value = update_value(c)
     @stocks.each do |stock|
       current = stock.new_price * stock.quantity
@@ -25,16 +37,18 @@ class Trader
       percent = 100 * (current / cost ) - 100
       
       status = "%6s " % stock.symbol
-      status << " $%6.2f " % stock.new_price.to_f
-      status << "%6.0f" % stock.quantity      
-      status << "  $%6.2f " % current
-      status << " $%6.2f " % (current - cost)
+      status << right_align('$',stock.new_price.to_f, 5)
+      status << " %6.0f" % stock.quantity      
+      status << right_align('$',current, 8)
+      status << right_align('$',current-cost,5)
       status << "(%3.2f" % percent + '%)'
       puts status 
     end
-    puts "\nCurrent Stocks $%6.2f " % total_value
-    puts "          Cash $%6.2f " % ( @cash )
-    puts "         Total $%6.2f " % ( total_value + @cash )
+    puts
+    puts right_align('                Stocks $',total_value, 8)
+    puts right_align('                Cash   $', @cash, 8)
+    puts right_align('                Total  $',total_value + @cash, 8) 
+    
   end
   
   def update_value(c)
@@ -99,7 +113,7 @@ if __FILE__ == $0
     # purchase equal value amounts of all listed stocks
     listed.each do |symbol| 
       s = Stock.new
-      action, s.symbol, s.quantity, s.cost_price = c.buy(symbol, (even_lot/c.price(symbol)).to_i)
+      action, s.symbol, s.quantity, s.cost_price = c.buy(symbol, -(even_lot/c.price(symbol)).to_i)
        s.quantity = s.quantity.to_i
        s.old_price = s.new_price = s.cost_price = s.cost_price.to_f
       portfolio.stocks << s
